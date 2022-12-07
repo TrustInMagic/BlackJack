@@ -39,6 +39,7 @@ def ace_swapper(cards, aces):
             suit = card[1]
             cards[idx] = "1" + suit
             aces.append(card)
+            break
             
 
 
