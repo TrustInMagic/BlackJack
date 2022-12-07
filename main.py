@@ -11,14 +11,14 @@ class Blackjack:
         self.pre_game()
 
     def pre_game(self):
-        while self.player_money > 0:
+        if self.player_money > 0:
             player_accept = input(f"You are starting with ${self.player_money}. Would you like to play a hand? ")
 
             if player_accept.lower() == "yes":
                 self.betting_round()
             else:
                 self.end_game()
-                break
+                
     
     def betting_round(self):
         while True:
@@ -41,13 +41,14 @@ class Blackjack:
         dealer_hand = d.deal_cards(2)
         player_hand = d.deal_cards(2)
         player_points = card_sintax.blackjack_value(player_hand)
+        aces = []
+        
 
         print(f"You are dealt: {player_hand[0]}, {player_hand[1]}")
         print(f"The dealer is dealt: {dealer_hand[0]}, Unknown")
-
-        print(f"Player: {player_points}")
         
         while player_points <= 21:
+            player_points = card_sintax.blackjack_value(player_hand)
             if self.blackjack_checker(player_hand) == True and self.blackjack_checker(dealer_hand) == False:
                 print(f"Blackjack! You win {self.bet * 1.5} :)")
                 self.player_money += self.bet * 1.5
@@ -60,38 +61,29 @@ class Blackjack:
                 hit = d.deal_cards(1)
                 print(f"You are dealt: {hit[0]}")
                 player_hand.append(hit[0])
-                pretty_player_hard = ", ".join(player_hand)
-                print(f"You now have: {pretty_player_hard}")
+                print(card_sintax.hand_displayer(player_hand, aces))
                 player_points = card_sintax.blackjack_value(player_hand)
-
-                print(f"Player: {player_points}")
 
             else:
                 self.showdown(dealer_hand, player_hand, d)
                 break
 
             if player_points > 21:
-                card_sintax.ace_swapper(player_hand)
+                card_sintax.ace_swapper(player_hand, aces)
                 player_points = card_sintax.blackjack_value(player_hand)
 
-                print(f"Player: {player_points}")
 
             if player_points > 21:
                 print(f"Your hand value is over 21 and you lose ${self.bet} :(")
                 self.player_money -= self.bet
                 self.pre_game()
 
-        
-        print(f"Your hand value is over 21 and you lose ${self.bet} :(")
-        self.player_money -= self.bet
-        self.pre_game()
-
 
     def showdown(self, dealers_hand, player_hand, deck):
         dealer_hand = dealers_hand[:]
         dealer_points = card_sintax.blackjack_value(dealer_hand)
-
-        print(f"Dealer: {dealer_points}")
+        aces = []
+        hand_ender = 0
 
         print(f"The dealer has {dealer_hand[0]} {dealer_hand[1]}")
 
@@ -99,40 +91,37 @@ class Blackjack:
             hit = deck.deal_cards(1)
             print(f"The dealer hits and is dealt: {hit[0]}")
             dealer_hand.append(hit[0])
-            pretty_dealer_hand = ", ".join(dealer_hand)
-            print(f"The dealer has {pretty_dealer_hand}")
+            print(card_sintax.hand_displayer(dealer_hand, aces))
             dealer_points = card_sintax.blackjack_value(dealer_hand)
 
-            print(f"Dealer #1: {dealer_points}")
-            print(f"Dealer's hand {dealer_hand}")
-
             if dealer_points > 21:
-                card_sintax.ace_swapper(dealer_hand)
+                card_sintax.ace_swapper(dealer_hand, aces)
                 dealer_points = card_sintax.blackjack_value(dealer_hand)
-
-            print(f"Dealer #2: {dealer_points}")
-            print(f"Dealer's hand {dealer_hand}")
 
             if dealer_points > 21:
                 print(f"The dealer busts, you win ${self.bet}")
+                hand_ender += 1
                 self.player_money += self.bet
                 self.pre_game()
-          
-        print("The dealer stays.") 
+                break
+        
+        if hand_ender == 0:
+            print("The dealer stays.") 
 
-        player_points = card_sintax.blackjack_value(player_hand)
-    
+            player_points = card_sintax.blackjack_value(player_hand)
+        
+            if player_points > dealer_points:
+                print(f"You win ${self.bet}!")
+                self.player_money += self.bet
+            elif player_points < dealer_points:
+                print(f"The dealer wins, you loose ${self.bet} :(")
+                self.player_money -= self.bet
+                if self.player_money == 0:
+                    self.end_game()
+            elif player_points == dealer_points:
+                print(f"You tie. Your bet has been returned.")
 
-        if player_points > dealer_points:
-            print(f"You win ${self.bet}!")
-            self.player_money += self.bet
-        elif player_points < dealer_points:
-            print(f"The dealer wins, you loose ${self.bet} :(")
-            self.player_money -= self.bet
-        elif player_points == dealer_points:
-            print(f"You tie. Your bet has been returned.")
-
-        self.pre_game()
+            self.pre_game()
 
 
     def end_game(self):

@@ -33,12 +33,14 @@ def blackjack_value(cards):
     return values
 
 
-def ace_swapper(cards):
+def ace_swapper(cards, aces):
     for idx, card in enumerate(cards):
         if "A" in card:
-            cards[idx] = "1"
-           
-        
+            suit = card[1]
+            cards[idx] = "1" + suit
+            aces.append(card)
+            
+
 
 def hit_or_stay():
     while True:
@@ -48,3 +50,13 @@ def hit_or_stay():
         print("That is not a valid option.")
 
 
+def hand_displayer(hand, aces):
+    interior_hand = hand
+    interior_aces = aces
+
+    for idx, ace in enumerate(interior_aces):
+        for idx2, card in enumerate(interior_hand):
+            if card[0] == "1" and ace[1] == card[1]:
+                interior_hand[idx2] = interior_aces[idx]
+    
+    return ", ".join(interior_hand)
