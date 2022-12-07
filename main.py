@@ -69,13 +69,11 @@ class Blackjack:
                 self.showdown(dealer_hand, player_hand, d)
                 break
             
-            print(f"#1 player cards: {player_hand}, player points: {player_points}")
 
             while player_points > 21:
                 card_sintax.ace_swapper(player_hand, aces)
                 player_points = card_sintax.blackjack_value(player_hand)
 
-            print(f"#2 player cards: {player_hand}, player points: {player_points}")
 
             if player_points > 21:
                 print(f"Your hand value is over 21 and you lose ${self.bet} :(")
