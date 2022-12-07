@@ -46,15 +46,16 @@ class Blackjack:
 
         print(f"You are dealt: {player_hand[0]}, {player_hand[1]}")
         print(f"The dealer is dealt: {dealer_hand[0]}, Unknown")
+
+
+        if self.blackjack_checker(player_hand) == True and self.blackjack_checker(dealer_hand) == False:
+            print(f"Blackjack! You win ${round(self.bet * 1.5)} :)")
+            print(f"Dealer has: {dealer_hand[0]}, {dealer_hand[1]}")
+            self.player_money += round(self.bet * 1.5)
+            self.pre_game()
+
         
         while player_points <= 21:
-            player_points = card_sintax.blackjack_value(player_hand)
-            if self.blackjack_checker(player_hand) == True and self.blackjack_checker(dealer_hand) == False:
-                print(f"Blackjack! You win {self.bet * 1.5} :)")
-                self.player_money += self.bet * 1.5
-                self.pre_game()
-                break
-
             decision = card_sintax.hit_or_stay()
 
             if decision == "hit":
@@ -67,11 +68,14 @@ class Blackjack:
             else:
                 self.showdown(dealer_hand, player_hand, d)
                 break
+            
+            print(f"#1 player cards: {player_hand}, player points: {player_points}")
 
-            if player_points > 21:
+            while player_points > 21:
                 card_sintax.ace_swapper(player_hand, aces)
                 player_points = card_sintax.blackjack_value(player_hand)
 
+            print(f"#2 player cards: {player_hand}, player points: {player_points}")
 
             if player_points > 21:
                 print(f"Your hand value is over 21 and you lose ${self.bet} :(")
@@ -87,6 +91,11 @@ class Blackjack:
 
         print(f"The dealer has {dealer_hand[0]} {dealer_hand[1]}")
 
+        if dealer_points > 21:
+            card_sintax.ace_swapper(dealer_hand, aces)
+            dealer_points = card_sintax.blackjack_value(dealer_hand)
+
+
         while dealer_points < 17:
             hit = deck.deal_cards(1)
             print(f"The dealer hits and is dealt: {hit[0]}")
@@ -94,7 +103,7 @@ class Blackjack:
             print(card_sintax.hand_displayer(dealer_hand, aces))
             dealer_points = card_sintax.blackjack_value(dealer_hand)
 
-            if dealer_points > 21:
+            while dealer_points > 21:
                 card_sintax.ace_swapper(dealer_hand, aces)
                 dealer_points = card_sintax.blackjack_value(dealer_hand)
 
@@ -136,6 +145,8 @@ class Blackjack:
     def blackjack_checker(hand):
         if card_sintax.blackjack_value(hand) == 21:
             return True
+        else:
+            return False
 
 
 b = Blackjack()
