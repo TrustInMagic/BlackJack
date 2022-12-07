@@ -10,6 +10,8 @@ class Blackjack:
         print("Welcome to Blackjack! \n")
         self.pre_game()
 
+    ## function names should usually verbs
+    ## eg. setup_game or initialize_game
     def pre_game(self):
         if self.player_money > 0:
             player_accept = input(f"You are starting with ${self.player_money}. Would you like to play a hand? ")
@@ -18,8 +20,8 @@ class Blackjack:
                 self.betting_round()
             else:
                 self.end_game()
-                
-    
+
+    ## rename to bet or start_bet or some other verb
     def betting_round(self):
         while True:
             bet = int(input("Place your bet: "))
@@ -32,8 +34,9 @@ class Blackjack:
                 self.bet = bet
                 self.actual_game()
                 break
-                
 
+    ## there's too much logic inside this function and does too many things
+    ## you should strive to make your functions to do only one thing (or very few things)
     def actual_game(self):
         d = Deck()
         d.shuffle_deck()
@@ -42,7 +45,7 @@ class Blackjack:
         player_hand = d.deal_cards(2)
         player_points = card_sintax.blackjack_value(player_hand)
         aces = []
-        
+
 
         print(f"You are dealt: {player_hand[0]}, {player_hand[1]}")
         print(f"The dealer is dealt: {dealer_hand[0]}, Unknown")
@@ -54,7 +57,7 @@ class Blackjack:
             self.player_money += round(self.bet * 1.5)
             self.pre_game()
 
-        
+
         while player_points <= 21:
             decision = card_sintax.hit_or_stay()
 
@@ -68,7 +71,7 @@ class Blackjack:
             else:
                 self.showdown(dealer_hand, player_hand, d)
                 break
-            
+
             print(f"#1 player cards: {player_hand}, player points: {player_points}")
 
             while player_points > 21:
@@ -113,12 +116,12 @@ class Blackjack:
                 self.player_money += self.bet
                 self.pre_game()
                 break
-        
+
         if hand_ender == 0:
-            print("The dealer stays.") 
+            print("The dealer stays.")
 
             player_points = card_sintax.blackjack_value(player_hand)
-        
+
             if player_points > dealer_points:
                 print(f"You win ${self.bet}!")
                 self.player_money += self.bet
@@ -139,7 +142,7 @@ class Blackjack:
 
         elif self.player_money == 0:
             print("You've ran out of money. Better luck next time!")
-            
+
 
     @staticmethod
     def blackjack_checker(hand):
