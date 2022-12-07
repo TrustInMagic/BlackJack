@@ -49,7 +49,7 @@ class Blackjack:
 
 
         if self.blackjack_checker(player_hand) == True and self.blackjack_checker(dealer_hand) == False:
-            print(f"Blackjack! You win ${round(self.bet * 1.5)} :)")
+            print(f"Blackjack! You win ${round(self.bet * 1.5)} :) \n")
             print(f"Dealer has: {dealer_hand[0]}, {dealer_hand[1]}")
             self.player_money += round(self.bet * 1.5)
             self.pre_game()
@@ -76,7 +76,7 @@ class Blackjack:
 
 
             if player_points > 21:
-                print(f"Your hand value is over 21 and you lose ${self.bet} :(")
+                print(f"Your hand value is over 21 and you lose ${self.bet} :( \n")
                 self.player_money -= self.bet
                 self.pre_game()
 
@@ -106,7 +106,7 @@ class Blackjack:
                 dealer_points = card_sintax.blackjack_value(dealer_hand)
 
             if dealer_points > 21:
-                print(f"The dealer busts, you win ${self.bet}")
+                print(f"The dealer busts, you win ${self.bet} :) \n")
                 hand_ender += 1
                 self.player_money += self.bet
                 self.pre_game()
@@ -121,22 +121,22 @@ class Blackjack:
                 print(f"You win ${self.bet}!")
                 self.player_money += self.bet
             elif player_points < dealer_points:
-                print(f"The dealer wins, you loose ${self.bet} :(")
+                print(f"The dealer wins, you loose ${self.bet} :( \n")
                 self.player_money -= self.bet
                 if self.player_money == 0:
                     self.end_game()
             elif player_points == dealer_points:
-                print(f"You tie. Your bet has been returned.")
+                print(f"You tie. Your bet has been returned. \n")
 
             self.pre_game()
 
 
     def end_game(self):
         if self.player_money > 0:
-            print(f"You left the table with ${self.player_money}. See you next time!")
+            print(f"You left the table with ${self.player_money}. See you next time! \n\n")
 
         elif self.player_money == 0:
-            print("You've ran out of money. Better luck next time!")
+            print("You've ran out of money. Better luck next time! \n\n")
             
 
     @staticmethod
